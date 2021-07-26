@@ -5,8 +5,11 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "test": "nyc _mocha --timeout 10000 --exit --report lcovonly -- -R spec"
+    "test": "nyc _mocha --timeout 10000 --exit --report lcovonly -- -R spec",
+    "lint": "eslint --fix --config .eslintrc.json \"**/*.js\"",
+    "linting": "lint-staged"
   },
+  "pre-commit": "linting",
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -41,5 +44,14 @@
     "nyc": "^14.1.1",
     "pre-commit": "^1.2.2",
     "prettier": "^2.3.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{html,css,less,ejs}": [
+      "prettier --write"
+    ]
   }
 }
