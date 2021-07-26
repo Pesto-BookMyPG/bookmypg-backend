@@ -48,7 +48,7 @@ exports.userList = [
 ];
 
 /**
- * User Detail.
+ * User Detail..
  *
  * @param {string}      id
  *
