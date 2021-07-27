@@ -12,10 +12,10 @@ const connectDB = require("./config/db");
 
 var app = express();
 
-//Connect Database
+// Connect Database
 connectDB();
 
-//don't show the log when it is test
+// Don't show the log when it is test
 if (process.env.NODE_ENV !== "test") {
   app.use(logger("dev"));
 }
@@ -24,14 +24,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-//To allow cross-origin requests
+// To allow cross-origin requests
 app.use(cors());
 
-//Route Prefixes
+// Route Prefixes
 app.use("/", indexRouter);
 app.use("/api/", apiRouter);
 
-// throw 404 if URL not found
+// Throw 404 if URL not found
 app.all("*", function (req, res) {
   return apiResponse.notFoundResponse(res, "Page not found");
 });
