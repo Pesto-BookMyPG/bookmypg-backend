@@ -17,8 +17,9 @@ connectDB();
 
 // Don't show the log when it is test
 if (process.env.NODE_ENV !== "test") {
-  app.use(logger("dev"));
+	app.use(logger("dev"));
 }
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -33,13 +34,13 @@ app.use("/api/", apiRouter);
 
 // Throw 404 if URL not found
 app.all("*", function (req, res) {
-  return apiResponse.notFoundResponse(res, "Page not found");
+	return apiResponse.notFoundResponse(res, "Page not found");
 });
 
 app.use((err, req, res) => {
-  if (err.name === "UnauthorizedError") {
-    return apiResponse.unauthorizedResponse(res, err.message);
-  }
+	if (err.name === "UnauthorizedError") {
+		return apiResponse.unauthorizedResponse(res, err.message);
+	}
 });
 
 module.exports = app;
