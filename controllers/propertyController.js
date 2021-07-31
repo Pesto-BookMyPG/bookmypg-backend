@@ -64,21 +64,24 @@ exports.propertyDetail = [
 			return apiResponse.validationErrorWithData(res, "Invalid ID");
 		}
 		try {
-			Property.findOne({ _id: req.params.id }).then(property => {
-				if (property !== null) {
-					let propertyData = new PropertyData(property);
-					return apiResponse.successResponseWithData(
-						res,
-						"Operation success",
-						propertyData,
-					);
-				} else {
-					return apiResponse.notFoundResponse(
-						res,
-						"No record found with this ID",
-					);
-				}
-			});
+			Property.findOne({ _id: req.params.id })
+				.populate("location")
+				.then(property => {
+					if (property !== null) {
+						let propertyData = new PropertyData(property);
+
+						return apiResponse.successResponseWithData(
+							res,
+							"Operation success",
+							propertyData,
+						);
+					} else {
+						return apiResponse.notFoundResponse(
+							res,
+							"No record found with this ID",
+						);
+					}
+				});
 		} catch (err) {
 			// Throw error in json response with status 500.
 			return apiResponse.ErrorResponse(res, err);

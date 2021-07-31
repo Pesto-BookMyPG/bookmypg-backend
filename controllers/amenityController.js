@@ -97,7 +97,6 @@ exports.amenityStore = [
 		.withMessage("Name has non-alphanumeric characters."),
 	body("logo")
 		.isLength({ min: 1 })
-		.trim()
 		.withMessage("Logo must be specified.")
 		.custom(value => {
 			return Amenity.findOne({ name: value }).then(amenity => {
@@ -107,7 +106,7 @@ exports.amenityStore = [
 			});
 		}),
 	sanitizeBody("name").escape(),
-	sanitizeBody("logo").escape(),
+	//sanitizeBody('logo').escape(),
 	// Process request after validation and sanitization.
 	(req, res) => {
 		try {

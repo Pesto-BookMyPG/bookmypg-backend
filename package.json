@@ -19,6 +19,7 @@
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
+    "decode-uri-component": "^0.2.0",
     "dotenv": "^8.2.0",
     "express": "~4.16.0",
     "express-jwt": "^5.3.1",
@@ -30,7 +31,8 @@
     "mongoose": "^5.7.6",
     "morgan": "~1.9.0",
     "nodemailer": "^6.3.1",
-    "npm": "^7.20.2"
+    "npm": "^7.20.2",
+    "url-parse": "^1.5.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
