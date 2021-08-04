@@ -5,12 +5,7 @@ const role = require("../helpers/roles");
 
 var router = express.Router();
 
-router.get(
-	"/",
-	auth.protect,
-	auth.restrictTo(role.Admin, role.User),
-	userController.userList,
-);
+router.get("/", auth.protect, userController.userList);
 router.get(
 	"/:id",
 	auth.protect,
@@ -18,5 +13,6 @@ router.get(
 	userController.userDetail,
 );
 router.post("/", userController.userStore);
+router.delete("/:id", userController.userDelete);
 
 module.exports = router;
