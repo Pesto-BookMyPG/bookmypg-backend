@@ -4,7 +4,6 @@ const { sanitizeBody } = require("express-validator");
 const apiResponse = require("../helpers/apiResponse");
 var mongoose = require("mongoose");
 mongoose.set("useFindAndModify", false);
-const jwt = require("jsonwebtoken");
 
 // User Schema
 function UserData(data) {
@@ -25,7 +24,7 @@ function UserData(data) {
 exports.userList = [
 	function (req, res) {
 		try {
-			User.find().then(users => {
+			User.find({ isactive: true }).then(users => {
 				if (users.length > 0) {
 					return apiResponse.successResponseWithData(
 						res,
@@ -60,7 +59,7 @@ exports.userDetail = [
 			return apiResponse.validationErrorWithData(res, "Invalid ID");
 		}
 		try {
-			User.findOne({ _id: req.params.id }).then(user => {
+			User.findOne({ _id: req.params.id, isactive: true }).then(user => {
 				if (user !== null) {
 					let userData = new UserData(user);
 					return apiResponse.successResponseWithData(
@@ -112,7 +111,7 @@ exports.userStore = [
 		.isEmail()
 		.withMessage("Email must be a valid email address.")
 		.custom(value => {
-			return User.findOne({ email: value }).then(user => {
+			return User.findOne({ email: value, isactive: true }).then(user => {
 				if (user) {
 					return Promise.reject("E-mail already in use");
 				}
@@ -155,14 +154,6 @@ exports.userStore = [
 						phone: user.phone,
 						role: user.role,
 					};
-					//Prepare JWT token for authentication
-					const jwtPayload = userData;
-					const jwtData = {
-						expiresIn: process.env.JWT_TIMEOUT_DURATION,
-					};
-					const secret = process.env.JWT_SECRET;
-					//Generated JWT token with Payload and secret.
-					userData.token = jwt.sign(jwtPayload, secret, jwtData);
 					return apiResponse.successResponseWithData(
 						res,
 						"User add Success.",
@@ -172,6 +163,58 @@ exports.userStore = [
 			}
 		} catch (err) {
 			// Throw error in json response with status 500.
+			return apiResponse.ErrorResponse(res, err);
+		}
+	},
+];
+
+/**
+ * User disable.
+ *
+ * @param {string}      id
+ *
+ *
+ * @returns {Object}
+ */
+exports.userDelete = [
+	(req, res) => {
+		try {
+			var user = { isactive: false };
+			if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+				return apiResponse.validationErrorWithData(
+					res,
+					"Invalid Error.",
+					"Invalid ID",
+				);
+			} else {
+				User.findOne(
+					{ id: req.params.id, isactive: true },
+					function (err, foundUser) {
+						if (foundUser === null) {
+							return apiResponse.notFoundResponse(
+								res,
+								"User does not exist with this id",
+							);
+						} else {
+							// Disable user.
+							User.findByIdAndUpdate(req.params.id, user, function (err) {
+								if (err) {
+									return apiResponse.ErrorResponse(res, err);
+								} else {
+									let userData = new UserData(user);
+									return apiResponse.successResponseWithData(
+										res,
+										"User update Success.",
+										userData,
+									);
+								}
+							});
+						}
+					},
+				);
+			}
+		} catch (err) {
+			//throw error in json response with status 500.
 			return apiResponse.ErrorResponse(res, err);
 		}
 	},

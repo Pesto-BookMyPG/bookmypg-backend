@@ -8,4 +8,4 @@ var LocationSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-module.exports = mongoose.model("Location", LocationSchema);
+module.exports = mongoose.model("location", LocationSchema);

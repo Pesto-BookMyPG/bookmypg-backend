@@ -9,4 +9,4 @@ var AmenitySchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-module.exports = mongoose.model("Amenity", AmenitySchema);
+module.exports = mongoose.model("amenity", AmenitySchema);
